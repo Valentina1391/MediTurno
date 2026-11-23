@@ -1,0 +1,6 @@
+<label for="idioma" class="visually-hidden">Idioma / Language / Langue</label>
+<select id="idioma" class="form-select form-select-sm d-inline-block w-auto" (change)="cambiar($event)">
+  @for (l of i.idiomas; track l.codigo) {
+    <option [value]="l.codigo" [selected]="l.codigo === i.lang()">{{ l.nombre }}</option>
+  }
+</select>

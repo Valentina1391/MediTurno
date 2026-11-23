@@ -1,0 +1,104 @@
+<nav class="navbar navbar-dark barra px-3">
+  <span class="navbar-brand fw-semibold">
+    <i class="bi bi-heart-pulse-fill me-2" aria-hidden="true"></i>MediTurno
+  </span>
+  <span class="text-white d-flex align-items-center gap-2">
+    <app-selector-idioma />
+    <i class="bi bi-person-circle" aria-hidden="true"></i> {{ auth.nombre }}
+    <button class="btn btn-light btn-sm" (click)="salir()">
+      <i class="bi bi-box-arrow-right" aria-hidden="true"></i> {{ i.t('salir') }}
+    </button>
+  </span>
+</nav>
+
+<main id="contenido" class="container mt-4">
+
+  <!-- Contadores -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="tarjeta text-center mb-0">
+      <div class="fs-2 text-warning"><i class="bi bi-hourglass-split" aria-hidden="true"></i></div>
+      <div class="fs-3 fw-semibold">{{ programadas }}</div>
+      <div class="text-muted">{{ i.t('PROGRAMADA') }}</div>
+    </div></div>
+    <div class="col-md-4"><div class="tarjeta text-center mb-0">
+      <div class="fs-2 text-success"><i class="bi bi-check-circle" aria-hidden="true"></i></div>
+      <div class="fs-3 fw-semibold">{{ atendidas }}</div>
+      <div class="text-muted">{{ i.t('ATENDIDA') }}</div>
+    </div></div>
+    <div class="col-md-4"><div class="tarjeta text-center mb-0">
+      <div class="fs-2 text-danger"><i class="bi bi-x-circle" aria-hidden="true"></i></div>
+      <div class="fs-3 fw-semibold">{{ canceladas }}</div>
+      <div class="text-muted">{{ i.t('CANCELADA') }}</div>
+    </div></div>
+  </div>
+
+  <!-- Tarjeta 1: reservar -->
+  <section class="tarjeta">
+    <h1 class="h5 titulo-seccion">
+      <i class="bi bi-calendar-plus" aria-hidden="true"></i>{{ i.t('reservar') }}
+    </h1>
+
+    <form (ngSubmit)="reservar()" class="row g-3">
+      <div class="col-md-5">
+        <label for="medico" class="form-label">{{ i.t('medico') }}</label>
+        <select id="medico" name="medico" class="form-select" [(ngModel)]="medicoId" required>
+          <option [ngValue]="null" disabled>{{ i.t('seleccione') }}</option>
+          @for (m of medicos; track m.id) {
+            <option [ngValue]="m.id">{{ m.nombre }} - {{ m.especialidad?.nombre }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="fecha" class="form-label">{{ i.t('fecha') }}</label>
+        <input id="fecha" name="fecha" type="datetime-local" class="form-control"
+               [(ngModel)]="fechaHora" [min]="ahora" required>
+      </div>
+      <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="bi bi-check2" aria-hidden="true"></i> {{ i.t('reservarBtn') }}
+        </button>
+      </div>
+    </form>
+
+    @if (mensaje) { <div class="alert alert-success mt-3 mb-0" role="status">{{ i.t(mensaje) }}</div> }
+    @if (error) { <div class="alert alert-danger mt-3 mb-0" role="alert">{{ i.t(error) }}</div> }
+  </section>
+
+  <!-- Tarjeta 2: mis citas -->
+  <section class="tarjeta">
+    <h2 class="h5 titulo-seccion">
+      <i class="bi bi-journal-medical" aria-hidden="true"></i>{{ i.t('misCitas') }}
+    </h2>
+
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <caption class="visually-hidden">{{ i.t('misCitas') }}</caption>
+        <thead>
+          <tr>
+            <th>{{ i.t('medico') }}</th><th>{{ i.t('fecha') }}</th>
+            <th>{{ i.t('estado') }}</th><th>{{ i.t('accion') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of citas; track c.id) {
+            <tr>
+              <td>{{ c.medico?.nombre }}</td>
+              <td>{{ c.fechaHora.replace('T', ' ').slice(0, 16) }}</td>
+              <td><span class="estado estado-{{ c.estado }}">{{ i.t(c.estado) }}</span></td>
+              <td>
+                @if (c.estado === 'PROGRAMADA') {
+                  <button class="btn btn-outline-danger btn-sm" (click)="cancelar(c.id)"
+                          [attr.aria-label]="i.t('cancelar') + ' - ' + c.medico?.nombre">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i> {{ i.t('cancelar') }}
+                  </button>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="4" class="text-center text-muted">{{ i.t('sinCitas') }}</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>

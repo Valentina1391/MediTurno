@@ -1,0 +1,114 @@
+<nav class="navbar navbar-dark barra verde px-3">
+  <span class="navbar-brand fw-semibold">
+    <i class="bi bi-heart-pulse-fill me-2" aria-hidden="true"></i>MediTurno - {{ i.t('agenda') }}
+  </span>
+  <span class="text-white d-flex align-items-center gap-2">
+    <app-selector-idioma />
+    <i class="bi bi-person-circle" aria-hidden="true"></i> {{ auth.nombre }}
+    <button class="btn btn-light btn-sm" (click)="salir()">
+      <i class="bi bi-box-arrow-right" aria-hidden="true"></i> {{ i.t('salir') }}
+    </button>
+  </span>
+</nav>
+
+<main id="contenido" class="container mt-4">
+  <section class="tarjeta">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+      <h2 class="h5 titulo-seccion mb-0">
+        <i class="bi bi-calendar3" aria-hidden="true"></i>{{ i.t('calendario') }}
+      </h2>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-primary btn-sm" (click)="cambiarMes(-1)" aria-label="‹">
+          <i class="bi bi-chevron-left" aria-hidden="true"></i>
+        </button>
+        <strong class="text-capitalize" aria-live="polite">{{ tituloMes }}</strong>
+        <button class="btn btn-outline-primary btn-sm" (click)="cambiarMes(1)" aria-label="›">
+          <i class="bi bi-chevron-right" aria-hidden="true"></i>
+        </button>
+        <button class="btn btn-primary btn-sm" (click)="irHoy()">{{ i.t('hoy') }}</button>
+      </div>
+    </div>
+
+    <div class="calendario">
+      @for (d of diasSemana; track d) {
+        <div class="cal-cabecera text-capitalize">{{ d }}</div>
+      }
+      @for (c of celdas; track $index) {
+        @if (c) {
+        <button type="button" class="cal-dia"
+                [class.hoy]="c.fecha === hoy"
+                [class.activo]="c.fecha === seleccionado()"
+                (click)="seleccionado.set(c.fecha)"
+                [attr.aria-label]="c.dia + ' - ' + c.citas.length">
+          <span class="num">{{ c.dia }}</span>
+          @if (c.citas.length) {
+            <span class="badge bg-primary">{{ c.citas.length }}</span>
+          }
+        </button>
+      } @else {
+        <div class="cal-vacio"></div>
+      }
+      }
+    </div>
+
+  @if (seleccionado()) {
+    <h3 class="h6 mt-4">{{ i.t('citasDia') }}: {{ seleccionado() }}</h3>
+    <ul class="list-group">
+      @for (c of citasDelDia; track c.id) {
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span>
+            <i class="bi bi-clock me-1" aria-hidden="true"></i>
+            {{ c.fechaHora.slice(11, 16) }} · {{ c.paciente?.nombre }}
+          </span>
+          <span class="estado estado-{{ c.estado }}">{{ i.t(c.estado) }}</span>
+        </li>
+      } @empty {
+        <li class="list-group-item text-muted">{{ i.t('sinCitasDia') }}</li>
+      }
+    </ul>
+  }
+</section>
+  <section class="tarjeta">
+    <h1 class="h5 titulo-seccion">
+      <i class="bi bi-calendar-week" aria-hidden="true"></i>{{ i.t('agenda') }}
+    </h1>
+
+    <label for="buscar" class="form-label">{{ i.t('buscar') }}</label>
+    <div class="input-group mb-3">
+      <span class="input-group-text" aria-hidden="true"><i class="bi bi-search"></i></span>
+      <input id="buscar" class="form-control" (input)="filtrar($any($event.target).value)">
+    </div>
+
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <caption class="visually-hidden">{{ i.t('agenda') }}</caption>
+        <thead>
+          <tr>
+            <th>{{ i.t('paciente') }}</th><th>{{ i.t('medico') }}</th><th>{{ i.t('fecha') }}</th>
+            <th>{{ i.t('estado') }}</th><th>{{ i.t('accion') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of citas(); track c.id) {
+            <tr>
+              <td>{{ c.paciente?.nombre }}</td>
+              <td>{{ c.medico?.nombre }}</td>
+              <td>{{ c.fechaHora.replace('T', ' ').slice(0, 16) }}</td>
+              <td><span class="estado estado-{{ c.estado }}">{{ i.t(c.estado) }}</span></td>
+              <td>
+                @if (c.estado === 'PROGRAMADA') {
+                  <button class="btn btn-success btn-sm" (click)="atender(c.id)"
+                          [attr.aria-label]="i.t('atender') + ' - ' + c.paciente?.nombre">
+                    <i class="bi bi-check2-circle" aria-hidden="true"></i> {{ i.t('atender') }}
+                  </button>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="5" class="text-center text-muted">{{ i.t('noHay') }}</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>

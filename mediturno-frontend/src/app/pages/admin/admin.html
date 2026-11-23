@@ -1,0 +1,96 @@
+<nav class="navbar navbar-dark barra oscura px-3">
+  <span class="navbar-brand fw-semibold">
+    <i class="bi bi-heart-pulse-fill me-2" aria-hidden="true"></i>MediTurno - {{ i.t('admin') }}
+  </span>
+  <span class="text-white d-flex align-items-center gap-2">
+    <app-selector-idioma />
+    <i class="bi bi-person-circle" aria-hidden="true"></i> {{ auth.nombre }}
+    <button class="btn btn-light btn-sm" (click)="salir()">
+      <i class="bi bi-box-arrow-right" aria-hidden="true"></i> {{ i.t('salir') }}
+    </button>
+  </span>
+</nav>
+
+<main id="contenido" class="container mt-4">
+  @if (error) { <div class="alert alert-danger" role="alert">{{ i.t(error) }}</div> }
+
+  <div class="row g-3 mb-4">
+    @for (r of resumen; track r.estado) {
+      <div class="col-md-4">
+        <div class="tarjeta text-center mb-0">
+          <div class="fs-3 fw-semibold">{{ r.total }}</div>
+          <span class="estado estado-{{ r.estado }}">{{ i.t(r.estado) }}</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <section class="tarjeta">
+    <h1 class="h5 titulo-seccion">
+      <i class="bi bi-bandaid" aria-hidden="true"></i>{{ i.t('especialidades') }}
+    </h1>
+    <form (ngSubmit)="crearEspecialidad()" class="row g-3 mb-2">
+      <div class="col-md-9">
+        <label for="esp" class="form-label">{{ i.t('nuevaEsp') }}</label>
+        <input id="esp" name="esp" class="form-control" [(ngModel)]="nombreEspecialidad" required>
+      </div>
+      <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="bi bi-plus-lg" aria-hidden="true"></i> {{ i.t('agregar') }}
+        </button>
+      </div>
+    </form>
+    <ul class="mb-0">
+      @for (e of especialidades; track e.id) { <li>{{ e.nombre }}</li> }
+    </ul>
+  </section>
+
+  <section class="tarjeta">
+    <h2 class="h5 titulo-seccion">
+      <i class="bi bi-people" aria-hidden="true"></i>{{ i.t('medicos') }}
+    </h2>
+    <form (ngSubmit)="crearMedico()" class="row g-3 mb-3">
+      <div class="col-md-5">
+        <label for="nom" class="form-label">{{ i.t('nombreMedico') }}</label>
+        <input id="nom" name="nom" class="form-control" [(ngModel)]="nombreMedico" required>
+      </div>
+      <div class="col-md-4">
+        <label for="espSel" class="form-label">{{ i.t('especialidad') }}</label>
+        <select id="espSel" name="espSel" class="form-select" [(ngModel)]="especialidadId" required>
+          <option [ngValue]="null" disabled>{{ i.t('seleccioneEsp') }}</option>
+          @for (e of especialidades; track e.id) {
+            <option [ngValue]="e.id">{{ e.nombre }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="bi bi-person-plus" aria-hidden="true"></i> {{ i.t('agregarMedico') }}
+        </button>
+      </div>
+    </form>
+
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <caption class="visually-hidden">{{ i.t('medicos') }}</caption>
+        <thead>
+          <tr><th>{{ i.t('nombre') }}</th><th>{{ i.t('especialidad') }}</th><th>{{ i.t('accion') }}</th></tr>
+        </thead>
+        <tbody>
+          @for (m of medicos; track m.id) {
+            <tr>
+              <td>{{ m.nombre }}</td>
+              <td>{{ m.especialidad?.nombre }}</td>
+              <td>
+                <button class="btn btn-outline-danger btn-sm" (click)="eliminarMedico(m.id)"
+                        [attr.aria-label]="i.t('eliminar') + ' - ' + m.nombre">
+                  <i class="bi bi-trash" aria-hidden="true"></i> {{ i.t('eliminar') }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>

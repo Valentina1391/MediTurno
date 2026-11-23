@@ -1,0 +1,145 @@
+:root {
+  --azul: #0d6efd;
+  --azul-oscuro: #0a3d91;
+  --verde: #198754;
+  --fondo: #f1f5fb;
+}
+
+body {
+  font-family: 'Poppins', system-ui, sans-serif;
+  background: var(--fondo);
+  color: #1f2937;
+}
+
+:focus-visible { outline: 3px solid #ffbf47; outline-offset: 2px; }
+
+.saltar { position: absolute; left: -999px; }
+.saltar:focus {
+  left: 8px; top: 8px; z-index: 1000;
+  background: #fff; padding: 8px 12px; border-radius: 6px;
+}
+
+/* Barra superior */
+.barra {
+  background: linear-gradient(90deg, var(--azul-oscuro), var(--azul));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+}
+.barra.verde { background: linear-gradient(90deg, #0f5132, var(--verde)); }
+.barra.oscura { background: linear-gradient(90deg, #111827, #374151); }
+
+/* Tarjetas */
+.tarjeta {
+  background: #fff;
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, .08);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.titulo-seccion {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: 1rem;
+}
+.titulo-seccion i { color: var(--azul); }
+
+/* Tablas */
+.table thead th {
+  background: #eef3fb;
+  border-bottom: 2px solid #d6e2f5;
+  font-weight: 600;
+}
+.table tbody tr:hover { background: #f5f9ff; }
+
+/* Botones */
+.btn { border-radius: 10px; font-weight: 500; }
+
+/* Estados de citas */
+.estado {
+  display: inline-block;
+  padding: .25rem .75rem;
+  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: 600;
+}
+.estado-PROGRAMADA { background: #fff3cd; color: #7a5b00; }
+.estado-ATENDIDA   { background: #d1e7dd; color: #0f5132; }
+.estado-CANCELADA  { background: #f8d7da; color: #842029; }
+
+/* Login */
+.fondo-login {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a3d91 0%, #0d6efd 50%, #6ea8fe 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.caja-login {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 2rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .25);
+}
+.logo {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: #e7f0ff;
+  color: var(--azul);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 1rem;
+}
+/* Calendario */
+.calendario {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.cal-cabecera {
+  text-align: center;
+  font-weight: 600;
+  font-size: .85rem;
+  color: #475569;
+  padding: .25rem 0;
+}
+.cal-dia, .cal-vacio {
+  min-height: 70px;
+  border-radius: 10px;
+}
+.cal-dia {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: .4rem .5rem;
+  cursor: pointer;
+  transition: background .15s, transform .15s;
+}
+.cal-dia:hover { background: #e7f0ff; transform: translateY(-2px); }
+.cal-dia.hoy { border: 2px solid var(--azul); }
+.cal-dia.activo { background: #dbeafe; border-color: var(--azul-oscuro); }
+.cal-dia .num { font-weight: 600; }
+
+@media (max-width: 576px) {
+  .cal-dia, .cal-vacio { min-height: 52px; }
+  .cal-dia .badge { font-size: .65rem; }
+}
+
+.hero {
+  background: linear-gradient(135deg, #0a3d91 0%, #0d6efd 60%, #6ea8fe 100%);
+  padding: 5rem 0;
+}
+
+.icono-f {
+  width: 64px; height: 64px; margin: 0 auto 1rem;
+  border-radius: 50%; background: #e7f0ff; color: var(--azul);
+  display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+}

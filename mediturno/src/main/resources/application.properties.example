@@ -1,0 +1,15 @@
+spring.application.name=mediturno
+spring.datasource.url=jdbc:postgresql://localhost:5432/mediturno
+spring.datasource.username=postgres
+spring.datasource.password=TU_CONTRASEÑA_DE_POSTGRES
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+jwt.secret=UNA_CLAVE_LARGA_Y_ALEATORIA_DE_MINIMO_32_CARACTERES
+jwt.expiration=86400000
+server.port=8443
+server.ssl.enabled=true
+server.ssl.key-store=classpath:mediturno.p12
+server.ssl.key-store-password=TU_CONTRASEÑA_DEL_KEYSTORE
+server.ssl.key-store-type=PKCS12
+server.ssl.key-alias=mediturno
+google.client-id=660239589647-lemjp8n5rirtgi8igt859djmr92rivel.apps.googleusercontent.com
